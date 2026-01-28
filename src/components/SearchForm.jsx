@@ -4,7 +4,9 @@ import { getCountries } from "../services/api";
 export default function SearchForm({ onSearch, loading }) {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("ES");
-  const [year, setYear] = useState("2023");
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear.toString());
+
   const [error, setError] = useState(null);
 
   // 🔹 Cargar países al montar
@@ -36,14 +38,19 @@ export default function SearchForm({ onSearch, loading }) {
           <select
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            disabled={loading}
+            disabled={loading || countries.length === 0}
           >
-            {countries.map((c) => (
-              <option key={c.code} value={c.code}>
-                {c.name}
-              </option>
-            ))}
+            {countries.length === 0 ? (
+              <option>Cargando países...</option>
+            ) : (
+              countries.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.name}
+                </option>
+              ))
+            )}
           </select>
+
         </div>
 
         {/* Año */}
